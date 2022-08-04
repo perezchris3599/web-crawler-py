@@ -14,11 +14,12 @@ class PostsSpider(scrapy.Spider):
                 'date': post.css('.post-header a::text')[1].get(),
                 'author': post.css('.post-header a::text')[2].get()
             }
-
-
-
+        next_page = response.css('a.next-posts-link::attr(href)').get()
+        if next_page is not None:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(next_page, callback=self.parse)
 
         #page = response.url.split('/')[-1]
         #filename = 'posts-%s.html' % page
         #with open(filename, 'wb') as f:
-            #f.write(response.body)
+         #   f.write(response.body)
